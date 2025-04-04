@@ -40,8 +40,8 @@ function OrderCard({ order, onStatusChange, onDeliveryConfirmation }) {
 
   const statusColors = {
     'em espera': 'bg-yellow-100 text-yellow-800',
-    'preparando': 'bg-orange-100 text-orange-800',
-    'entregue': 'bg-green-100 text-green-800'
+    'em preparo': 'bg-orange-100 text-orange-800',
+    'finalizado': 'bg-green-100 text-green-800'
   };
 
   const formatCurrency = (value) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
@@ -54,9 +54,8 @@ function OrderCard({ order, onStatusChange, onDeliveryConfirmation }) {
 
   const getNextStatus = (currentStatus) => {
     switch (currentStatus) {
-      case 'em espera': return 'preparando';
-      case 'preparando': return 'entregue';
-      default: return currentStatus;
+      case 'em espera': return 'em preparo';  // Status muda de 'em espera' para 'em preparo'
+      default: return currentStatus;  // Não altera mais o status diretamente para 'finalizado'
     }
   };
 
@@ -69,7 +68,7 @@ function OrderCard({ order, onStatusChange, onDeliveryConfirmation }) {
             <p className="text-sm text-gray-500">{format(new Date(order.createdAt), "dd 'de' MMMM', às' HH:mm", { locale: ptBR })}</p>
           </div>
           <span className={`px-3 py-1 rounded-full text-sm font-medium ${statusColors[order.status]}`}>
-            {order.status === 'em espera' ? 'Em Espera' : order.status === 'preparando' ? 'Preparando' : 'Entregue'}
+            {order.status === 'em espera' ? 'Em Espera' : order.status === 'em preparo' ? 'Em Preparo' : 'Finalizado'}
           </span>
         </div>
 
@@ -108,7 +107,7 @@ function OrderCard({ order, onStatusChange, onDeliveryConfirmation }) {
           )}
         </div>
 
-        {order.status !== 'entregue' && (
+        {order.status !== 'finalizado' && (
           <div className="mt-6 space-y-4">
             {showConfirmation ? (
               <div className="space-y-2">
@@ -126,10 +125,12 @@ function OrderCard({ order, onStatusChange, onDeliveryConfirmation }) {
               </div>
             ) : (
               <>
-                <button onClick={() => onStatusChange(order.id, getNextStatus(order.status))} className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition-colors">
-                  {order.status === 'em espera' ? 'Iniciar Preparo' : 'Marcar como Entregue'}
-                </button>
-                {order.status === 'preparando' && (
+                {order.status === 'em espera' && (
+                  <button onClick={() => onStatusChange(order.id, getNextStatus(order.status))} className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition-colors">
+                    Iniciar Preparo
+                  </button>
+                )}
+                {order.status === 'em preparo' && (
                   <button onClick={() => setShowConfirmation(true)} className="w-full bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600 transition-colors">
                     Confirmar Entrega
                   </button>

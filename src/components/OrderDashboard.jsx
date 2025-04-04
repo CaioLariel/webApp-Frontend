@@ -43,7 +43,7 @@ function OrderDashboard() {
 
   const handleStatusChange = async (orderId, newStatus) => {
     try {
-      await axios.put(`http://localhost:3000/api/${orderId}/status`, { status: newStatus });
+      await axios.put(`http://localhost:3000/api/${orderId}/alteraStatus`, { status: newStatus });
       setOrders(prevOrders => prevOrders.map(order => 
         order.id === orderId ? { ...order, status: newStatus } : order
       ));
@@ -57,7 +57,7 @@ function OrderDashboard() {
     try {
       await axios.post(`http://localhost:3000/api/${orderId}/confirmar`, { codigo: code });
       setOrders(prevOrders => prevOrders.map(order => 
-        order.id === orderId ? { ...order, status: 'entregue' } : order
+        order.id === orderId ? { ...order, status: 'finalizado' } : order
       ));
       toast.success('Entrega confirmada com sucesso!');
     } catch (error) {
@@ -84,8 +84,8 @@ function OrderDashboard() {
         <div className="flex space-x-4">
           <button onClick={() => setFilter('all')} className={`px-4 py-2 rounded-md ${filter === 'all' ? 'bg-blue-500 text-white' : 'bg-white text-gray-700'}`}>Todos</button>
           <button onClick={() => setFilter('em espera')} className={`px-4 py-2 rounded-md ${filter === 'em espera' ? 'bg-yellow-500 text-white' : 'bg-white text-gray-700'}`}>Em Espera</button>
-          <button onClick={() => setFilter('preparando')} className={`px-4 py-2 rounded-md ${filter === 'preparando' ? 'bg-orange-500 text-white' : 'bg-white text-gray-700'}`}>Preparando</button>
-          <button onClick={() => setFilter('entregue')} className={`px-4 py-2 rounded-md ${filter === 'entregue' ? 'bg-green-500 text-white' : 'bg-white text-gray-700'}`}>Entregue</button>
+          <button onClick={() => setFilter('em preparo')} className={`px-4 py-2 rounded-md ${filter === 'em preparo' ? 'bg-orange-500 text-white' : 'bg-white text-gray-700'}`}>Em Preparo</button>
+          <button onClick={() => setFilter('finalizado')} className={`px-4 py-2 rounded-md ${filter === 'finalizado' ? 'bg-green-500 text-white' : 'bg-white text-gray-700'}`}>finalizado</button>
         </div>
       </div>
 
