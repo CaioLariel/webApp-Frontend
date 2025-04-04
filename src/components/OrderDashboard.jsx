@@ -16,7 +16,7 @@ function OrderDashboard() {
 
   const fetchOrders = async () => {
     try {
-      const response = await axios.get('http://localhost:3000/api/consultarPedidos');
+      const response = await axios.get('https://webapp.up.railway.app/api/consultarPedidos');
       
       if (response.data && response.data.length) {
         const formattedOrders = response.data.map(order => ({
@@ -43,7 +43,7 @@ function OrderDashboard() {
 
   const handleStatusChange = async (orderId, newStatus) => {
     try {
-      await axios.put(`http://localhost:3000/api/${orderId}/alteraStatus`, { status: newStatus });
+      await axios.put(`https://webapp.up.railway.app/api/${orderId}/alteraStatus`, { status: newStatus });
       setOrders(prevOrders => prevOrders.map(order => 
         order.id === orderId ? { ...order, status: newStatus } : order
       ));
@@ -55,7 +55,7 @@ function OrderDashboard() {
 
   const handleDeliveryConfirmation = async (orderId, code) => {
     try {
-      await axios.post(`http://localhost:3000/api/${orderId}/confirmar`, { codigo: code });
+      await axios.post(`https://webapp.up.railway.app/api/${orderId}/confirmar`, { codigo: code });
       setOrders(prevOrders => prevOrders.map(order => 
         order.id === orderId ? { ...order, status: 'finalizado' } : order
       ));
